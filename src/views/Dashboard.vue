@@ -83,6 +83,7 @@
 		  	handleDelete(id){
 		  		if(confirm("Do you really want to delete?")){
 		  	   		axios.delete('product/'+id);
+		  	   		this.$toast.success("Deleted successfully");
 		  	   		this.loadProducts();
 		  		}
 		  	}

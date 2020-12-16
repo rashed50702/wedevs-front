@@ -3,6 +3,15 @@ import App from './App.vue'
 import router from './router'
 import './axios'
 import store from './vuex'
+import Toast from "vue-toastification"
+import "vue-toastification/dist/index.css"
+
+const options = {
+  draggable: false
+}
+
+Vue.use(Toast, options);
+
 
 Vue.config.productionTip = false
 

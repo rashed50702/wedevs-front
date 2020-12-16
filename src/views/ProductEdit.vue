@@ -9,7 +9,7 @@
     						<div class="card-header"><h5>Edit Product</h5></div>
     						<div class="card-body">
     							<div class="form-group">
-    							  <label for="productTitle">Product Title</label>
+    							  <label for="productTitle">Product Title <span class="text-danger">*</span></label>
     							  <input type="text" class="form-control" v-model="product.title">
     							</div>
     							<div class="form-group">
@@ -17,7 +17,7 @@
     							  <textarea class="form-control" v-model="product.description"></textarea>
     							</div>
     							<div class="form-group">
-    							  <label for="productPrice">Price</label>
+    							  <label for="productPrice">Price <span class="text-danger">*</span></label>
     							  <input type="text" class="form-control" v-model="product.price">
     							</div>
     							<div class="form-group">
@@ -69,8 +69,15 @@
 				data.append('image', this.image);
                 data.append('_method', 'PUT');
 
-				const responsedata = await axios.post('product/' + this.id, data);
-                console.log(responsedata);
+				await axios.post('product/' + this.id, data)
+                            .then(response => {
+                                this.$toast.success(response.data.message);
+                            })
+                            .catch(error => {
+                                // console.log(error.response.data.message);
+                                this.$toast.error(error.response.data.message);
+                            });
+
 			}
 		}
 	}
