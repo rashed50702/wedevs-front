@@ -29,8 +29,8 @@
     				      	<img :src="'http://127.0.0.1:8000/images/products/'+product.image" alt="Image" v-if="product.image != null" class="rounded mx-auto d-block">
     				      </td>
     				      <td class="align-middle text-center">
-    				      	<a href="/product" class="border border-secondary p-1"><i class="fas fa-pencil-alt"></i></a>
-    				      	<a href="/product" class="border border-danger p-1 ml-2"><i class="fas fa-trash"></i></a>
+    				      	<router-link class="border border-secondary p-1" :to="'/product/'+product.id+'/edit'"><i class="fas fa-pencil-alt"></i></router-link>
+    				      	<a href="javascript:void(0)" class="border border-danger text-danger p-1 ml-1" @click="handleDelete(product.id)"><i class="fas fa-trash-alt"></i></a>
     				      </td>
     				    </tr>
     				  </tbody>
@@ -72,10 +72,20 @@
 			}
 		},
 		async created(){
-			const response = await axios.get('products');
-			this.products = response.data;
+			this.loadProducts();
+		},
+		methods:{
+			async loadProducts(){
+				const response = await axios.get('products');
+				this.products = response.data;
+			},
 
-			console.log(response.data);
+		  	handleDelete(id){
+		  		if(confirm("Do you really want to delete?")){
+		  	   		axios.delete('product/'+id);
+		  	   		this.loadProducts();
+		  		}
+		  	}
 		}
 
 
