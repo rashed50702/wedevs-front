@@ -1,28 +1,78 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <router-link class="nav-item" v-if="user" to="/dashboard">Dashboard</router-link>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item" v-if="!user">
+              <router-link class="nav-link" to="/login">Login</router-link>
+            </li>
+            <li class="nav-item" v-if="user">
+              <img class="card-img-top" src="./assets/user-avatar.png" alt="UserImage">
+              <div>
+                <a href="javascript:void(0)" @click="handleLogout">Logout</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- <router-view :user="user"/> -->
+
+    <router-view/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import axios from 'axios'
+  import {mapGetters} from 'vuex'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  export default{
+    // data(){
+    //   return {
+    //     user: null
+    //   }
+    // },
+
+    // async created(){
+    //   const response = await axios.get('user-profile', {
+    //     headers: {
+    //       Authorization: 'Bearer ' + localStorage.getItem('token')
+    //     }
+    //   });
+
+    //   this.user = response.data;
+    // },
+
+    async created(){
+      // const response = await axios.get('user-profile', {
+      //   headers: {
+      //     Authorization: 'Bearer ' + localStorage.getItem('token')
+      //   }
+      // });
+      const response = await axios.get('user-profile');
+
+      this.$store.dispatch('user', response.data);
+    },
+
+    methods:{
+      handleLogout(){
+        localStorage.removeItem('token');
+        this.$store.dispatch('user', null);
+        this.$router.push('/');
+      }
+    },
+    computed:{
+      ...mapGetters(['user'])
+    }
   }
-}
+  
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.nav-item img{
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
 }
 </style>
