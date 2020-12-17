@@ -10,7 +10,7 @@
     						<div class="card-body">
     							<div class="form-group">
     							  <label for="productTitle">Product Title <span class="text-danger">*</span></label>
-    							  <input type="text" class="form-control" v-model="title">
+    							  <input type="text" class="form-control" v-model="title" >
     							</div>
     							<div class="form-group">
     							  <label for="productDescription">Description</label>
@@ -39,17 +39,27 @@
 
 <script>
 	import axios from 'axios'
+    import {mapGetters} from 'vuex'
 
 	export default{
 		name: 'ProductCreate',
+        computed:{
+            ...mapGetters(['user'])
+        },
 		data(){
 			return{
 				title: '',
 				description: '',
 				price: '',
-				image: null
+				image: null,
+                errors: null
 			}
 		},
+        async created(){
+            // if (this.user == null) {
+            //     this.$router.push('/');
+            // }
+        },
 		methods: {
 			selectFile(event) {
 			    this.image = event.target.files[0];
@@ -62,7 +72,7 @@
 				data.append('price', this.price);
 				data.append('image', this.image);
 
-                await axios.post('product/save', data)
+                await axios.post('products', data)
                 .then(response => {
                     this.$toast.success(response.data.message);
                     this.title = "";
@@ -73,6 +83,7 @@
                 .catch(error => {
                     // console.log(error.response.data.message);
                     this.$toast.error(error.response.data.message);
+
                 });
 			}
 		}

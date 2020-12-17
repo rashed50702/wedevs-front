@@ -39,9 +39,13 @@
 
 <script>
 	import axios from 'axios'
+    import {mapGetters} from 'vuex'
 
 	export default{
 		name: 'ProductEdit',
+        computed:{
+            ...mapGetters(['user'])
+        },
 		data(){
 			return{
                 id: this.$route.params.id,
@@ -53,7 +57,11 @@
 			}
 		},
         async created(){
-            const response = await axios.get('product/' + this.id);
+            if (this.user == null) {
+                this.$router.push('/');
+            }
+
+            const response = await axios.get('products/' + this.id);
             this.product = response.data;
         },
 		methods: {
@@ -69,7 +77,7 @@
 				data.append('image', this.image);
                 data.append('_method', 'PUT');
 
-				await axios.post('product/' + this.id, data)
+				await axios.post('products/' + this.id, data)
                             .then(response => {
                                 this.$toast.success(response.data.message);
                             })
